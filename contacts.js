@@ -1,14 +1,15 @@
 const path = require('path')
 const fs = require('fs').promises
+const shortid = require('shortid')
 
-contactsPath = path.normalize(__dirname + '/db/contacts.json')
+contactsPath = path.join(__dirname + '/db/contacts.json')
 
 // TODO: задокументировать каждую функцию
 async function listContacts() {
   try {
     const data = await fs.readFile(contactsPath);
-    const parseData = JSON.parse(data).then(data => console.table(data));
-     return parseData;  
+    const parseData = JSON.parse(data)
+    console.table(parseData) 
   } catch (error) {
     console.log(error);
   }
@@ -16,13 +17,11 @@ async function listContacts() {
 
 // listContacts()
 
-// listContacts().then(data => console.table(data))
-
 async function getContactById(contactId) {
     try {
       const data = await fs.readFile(contactsPath)
       const parseData = JSON.parse(data)
-      const variable1 = parseData.find(contact => contact.id === contactId)
+      const variable1 = parseData.filter(contact => contact.id == contactId)
       console.log(variable1);
     } catch (error) {
       console.log(error);
@@ -35,7 +34,7 @@ async function getContactById(contactId) {
     try {  
       const data = await fs.readFile(contactsPath)
       const parseData = JSON.parse(data)
-      const deleteContact = parseData.filter(contact => contact.id !== contactId);
+      const deleteContact = parseData.filter(contact => contact.id != contactId);
       fs.writeFile(contactsPath, JSON.stringify(deleteContact))
       console.log(deleteContact);
     }catch (error) {
@@ -43,13 +42,13 @@ async function getContactById(contactId) {
     }
   }
 
-console.log(removeContact(1));
+// console.log(removeContact(1));
   
 async function addContact(name, email, phone) {
   try {  
     const data = await fs.readFile(contactsPath)
     const parseData = JSON.parse(data)
-    const newContact = {name, email, phone}
+    const newContact = {id: shortid.generate(), name, email, phone}
     const allContact = [...parseData, newContact];
     await fs.writeFile(contactsPath, JSON.stringify(allContact))
     console.log(allContact);
@@ -57,5 +56,5 @@ async function addContact(name, email, phone) {
     console.log(error)
   }
   }
-  // addContact('Maryna', 'mmmarina21@i.ua', '5555555')
+  addContact('Maryna', 'mmmarina21@i.ua', '5555555')
 module.exports = {listContacts, getContactById, removeContact, addContact}

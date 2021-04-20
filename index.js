@@ -21,7 +21,7 @@ const argv = program.opts()
 function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case 'list':
-      listContacts().then(data => console.table(data))
+      listContacts()
       break
 
     case 'get':
@@ -29,7 +29,7 @@ function invokeAction({ action, id, name, email, phone }) {
       break
 
     case 'add':
-      addContact(name, email, phone)
+      addContact(id, name, email, phone)
       break
 
     case 'remove':
